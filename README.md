@@ -1,6 +1,6 @@
 # App Enviroment Info
 
-checks which enviroment you are based on tab url, DEV, PROD or HML
+checks which enviroment you are based on tab url: `DEV`, `PROD` or `HML`
 
 ## How it works?
 
