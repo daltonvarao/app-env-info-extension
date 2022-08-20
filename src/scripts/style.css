@@ -1,0 +1,83 @@
+:root {
+  --green: #00daad;
+  --blue: #3366ff;
+  --orange: #ff703d;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.env-badge {
+  width: 120px;
+  height: 40px;
+  position: fixed;
+  top: 0px;
+  z-index: 999999;
+  text-align: center;
+  border-end-end-radius: 40px;
+  border-end-start-radius: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
+  background-color: color;
+  opacity: 0.8;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+  border: 1px solid #00000008;
+  user-select: none;
+}
+
+.popup-panel {
+  width: 260px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-panel .row {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input-switch input {
+  display: none;
+}
+
+.input-switch label {
+  display: block;
+  position: relative;
+  width: 42px;
+  height: 20px;
+  border-radius: 24px;
+  background: #ccc;
+}
+
+.input-switch input:checked + label {
+  background: var(--green);
+}
+
+.input-switch input + label::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 20px;
+  height: 14px;
+  background: #fff;
+  border-radius: 20px;
+  transition: all 0.3s;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+}
+
+.input-switch input:checked + label::after {
+  top: 3px;
+  left: 18px;
+}

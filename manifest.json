@@ -1,0 +1,28 @@
+{
+  "name": "Is In Prod",
+  "version": "1.0",
+  "description": "An extension that check if you are in prod version of teceo and alert you about the risks!",
+  "background": {
+    "service_worker": "src/scripts/background.js"
+  },
+  "permissions": ["activeTab", "storage", "scripting", "tabs"],
+  "action": {
+    "default_icon": "assets/shield-enabled-v1.png",
+    "default_popup": "src/index.html"
+  },
+  "manifest_version": 3,
+  "web_accessible_resources": [
+    {
+      "resources": ["*.js", "*.html"],
+      "matches": ["<all_urls>"],
+      "run_at": "document_end"
+    }
+  ],
+  "content_scripts": [
+    {
+      "css": ["src/scripts/style.css"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "host_permissions": ["https://*/*", "http://*/*"]
+}
