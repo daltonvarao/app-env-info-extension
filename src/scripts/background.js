@@ -1,9 +1,12 @@
-const PROD_URL = "app.teceo.co";
-const HOMOLOG_URL = "app.homolog.teceo.co";
-
 const PROD_COLOR = "#FF703D";
 const DEV_COLOR = "#00DAAD";
-const HML_COLOR = "#3366FF";
+const STAGING_COLOR = "#3366FF";
+
+async function getStorageAsync(name) {
+  const result = await chrome.storage.sync.get([name])
+
+  return result[name]
+}
 
 function showEnvBadge(color, env) {
   const div = document.createElement("div");
@@ -27,23 +30,21 @@ function removeEnvBadge() {
 }
 
 const changeEnv = async (tab) => {
-  const { text, color } = getCurrentEnv(tab.url);
+  const { showEnvInfo } = await chrome.storage.sync.get(["showEnvInfo"]);
+
+  if (!showEnvInfo) return;
+
+  const { text, color } = await getCurrentEnv(tab.url);
   chrome.action.setBadgeText({ text });
-  chrome.action.setTitle({
-    title: `Você está utilizando a versão de ${text} da teceo`,
-  });
+  chrome.action.setTitle({title: `In ${text} mode`});
 
   if (!color) return;
   chrome.action.setBadgeBackgroundColor({ color });
 
   chrome.scripting.insertCSS({
     target: { tabId: tab.id },
-    files: ["./src/scripts/style.css"],
+    files: ["./src/scripts/background.css"],
   });
-
-  const { showEnvInfo } = await chrome.storage.sync.get(["showEnvInfo"]);
-
-  if (!showEnvInfo) return;
 
   if (tab.status === "complete") {
     chrome.scripting.executeScript({
@@ -54,17 +55,39 @@ const changeEnv = async (tab) => {
   }
 };
 
-const getCurrentEnv = (url) => {
+const matchAnyUrls = (url, compareUrls) => {
+  let match = false;
+
+  for (const index in compareUrls) {
+    const sanitizedUrl = compareUrls[index].replaceAll('.', '\\.').replaceAll('*', '')
+    const regex = new RegExp(sanitizedUrl, 'i')
+
+    if(url.match(regex)) {
+      match = true;
+
+      break;
+    }
+  }
+
+  return match
+}
+
+const getCurrentEnv = async (url) => {
   if (url.includes("localhost") || url.includes("127.0.0.1")) {
     return { text: "DEV", color: DEV_COLOR };
   }
 
-  if (url.includes(PROD_URL)) {
-    return { text: "PROD", color: PROD_COLOR };
+  const apps = await getStorageAsync("apps");
+  let production_urls = apps.map(app => app.production)
+
+  if (matchAnyUrls(url, production_urls)) {
+    return { text: "PRODUCTION", color: PROD_COLOR };
   }
 
-  if (url.includes(HOMOLOG_URL)) {
-    return { text: "HML", color: HML_COLOR };
+  let staging_urls = apps.map(app => app.staging)
+
+  if (matchAnyUrls(url, staging_urls)) {
+    return { text: "STAGING", color: STAGING_COLOR };
   }
 
   return {

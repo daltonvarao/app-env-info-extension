@@ -1,0 +1,146 @@
+:root {
+  --green: #14b8a6;
+  --blue: #3366ff;
+  --orange: #ff703d;
+  --red: #f87171;
+  --gray: #efefef;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.popup-panel {
+  width: 290px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.popup-panel .row {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.input-switch input {
+  display: none;
+}
+
+.input-switch label {
+  display: block;
+  position: relative;
+  width: 42px;
+  height: 20px;
+  border-radius: 24px;
+  background: #ccc;
+}
+
+.input-switch input:checked + label {
+  background: var(--green);
+}
+
+.input-switch input + label::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 20px;
+  height: 14px;
+  background: #fff;
+  border-radius: 20px;
+  transition: all 0.3s;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+}
+
+.input-switch input:checked + label::after {
+  top: 3px;
+  left: 18px;
+}
+
+hr {
+  margin: 10px 0 5px;
+}
+
+.alert {
+  padding: 15px 5px;
+  color: #CA6510;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+#home-apps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn {
+  appearance: none;
+  background-color: var(--gray);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 20px;
+  transition: opacity .4s ease-in-out;
+  flex: 1;
+}
+
+.btn:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btn.green {
+  background-color: var(--green);
+  border-color: var(--green);
+}
+
+.btn.blue {
+  background-color: var(--blue);
+  border-color: var(--blue);
+  color: white;
+}
+
+.btn.red {
+  background-color: var(--red);
+  border-color: var(--red);
+  color: white;
+}
+
+.btn.green svg path, .btn.red svg path {
+  fill: white;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.8rem;
+}
+input[type="text"] {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  width: 100%;
+  color: #505050;
+}
