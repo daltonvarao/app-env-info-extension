@@ -8,7 +8,7 @@ const inputAppName = document.getElementById("app-name");
 const inputAppProduction = document.getElementById("app-production");
 const inputAppStaging = document.getElementById("app-staging");
 
-const BLANK_APP = {name: "", staging: "", production: ""};
+const BLANK_APP = { name: "", staging: "", production: "" };
 
 let apps = [];
 
@@ -16,17 +16,17 @@ async function setStorageAsync(name, value) {
   await chrome.storage.sync.set({ [name]: value });
 }
 
-async function getStorageAsync(name) {
-  const result = await chrome.storage.sync.get([name])
+async function getStorageAsync(name, defaultValue) {
+  const result = await chrome.storage.sync.get([name]);
 
-  return result[name]
+  return result[name] || defaultValue;
 }
 
 function navigate(pageId) {
   const pages = document.querySelectorAll(".page");
   const targetPage = document.getElementById(pageId);
 
-  Array.from(pages).forEach(page => {
+  Array.from(pages).forEach((page) => {
     page.style.display = "none";
   });
 
@@ -43,17 +43,19 @@ async function saveAppsAsync(appsCollection) {
 function showApps() {
   const homeApps = document.getElementById("home-apps");
 
-  if(apps.length == 0){
+  if (apps?.length == 0) {
     homeApps.innerHTML = `
-      <span class="alert">No apps found, try creating a new one</span>
+      <span class="alert">
+        No apps found, try creating a new one
+      </span>
     `;
 
     return;
   }
 
-  homeApps.innerHTML = '';
+  homeApps.innerHTML = "";
 
-  apps.forEach((app, index) => {
+  apps?.forEach((app, index) => {
     const app_btn = document.createElement("button");
     app_btn.innerText = app.name;
     app_btn.classList.add("btn");
@@ -72,7 +74,7 @@ function editApp(index) {
 
   saveBtn.onclick = () => saveFormApp(index);
 
-  if(currentApp.name) {
+  if (currentApp.name) {
     destroyBtn.onclick = () => destroyApp(index);
   } else {
     destroyBtn.style.display = "none";
@@ -86,31 +88,30 @@ async function saveFormApp(appIndex) {
   let production = inputAppProduction.value;
   let staging = inputAppStaging.value;
 
-  const currentApp = {name, production, staging};
+  const currentApp = { name, production, staging };
   let newApps = [];
 
-  if(typeof(appIndex) == 'number'){
-    newApps = apps.map((app, index) => appIndex == index ? currentApp : app );
-  }
-  else {
+  if (typeof appIndex == "number") {
+    newApps = apps.map((app, index) => (appIndex == index ? currentApp : app));
+  } else {
     newApps = [...apps, currentApp];
   }
-
-  await saveAppsAsync(newApps)
-
-  navigate("home-page");
-}
-
-async function destroyApp(appIndex) {
-  let newApps = apps.filter((app, index) => appIndex != index );
 
   await saveAppsAsync(newApps);
 
   navigate("home-page");
 }
 
-async function loadActive(){
-  const active = await getStorageAsync('showEnvInfo');
+async function destroyApp(appIndex) {
+  let newApps = apps.filter((app, index) => appIndex != index);
+
+  await saveAppsAsync(newApps);
+
+  navigate("home-page");
+}
+
+async function loadActive() {
+  const active = await getStorageAsync("showEnvInfo", false);
 
   switcher.checked = active;
 }
@@ -119,10 +120,10 @@ async function init() {
   await loadActive();
 
   switcher.addEventListener("change", (event) => {
-    setStorageAsync('showEnvInfo', event.target.checked);
+    setStorageAsync("showEnvInfo", event.target.checked);
   });
 
-  apps = await getStorageAsync("apps");
+  apps = await getStorageAsync("apps", []);
 
   showApps();
 

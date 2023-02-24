@@ -3,9 +3,9 @@ const DEV_COLOR = "#00DAAD";
 const STAGING_COLOR = "#3366FF";
 
 async function getStorageAsync(name) {
-  const result = await chrome.storage.sync.get([name])
+  const result = await chrome.storage.sync.get([name]);
 
-  return result[name]
+  return result[name];
 }
 
 function showEnvBadge(color, env) {
@@ -36,7 +36,7 @@ const changeEnv = async (tab) => {
 
   const { text, color } = await getCurrentEnv(tab.url);
   chrome.action.setBadgeText({ text });
-  chrome.action.setTitle({title: `In ${text} mode`});
+  chrome.action.setTitle({ title: `In ${text} mode` });
 
   if (!color) return;
   chrome.action.setBadgeBackgroundColor({ color });
@@ -59,18 +59,20 @@ const matchAnyUrls = (url, compareUrls) => {
   let match = false;
 
   for (const index in compareUrls) {
-    const sanitizedUrl = compareUrls[index].replaceAll('.', '\\.').replaceAll('*', '')
-    const regex = new RegExp(sanitizedUrl, 'i')
+    const sanitizedUrl = compareUrls[index]
+      .replaceAll(".", "\\.")
+      .replaceAll("*", "");
+    const regex = new RegExp(sanitizedUrl, "i");
 
-    if(url.match(regex)) {
+    if (url.match(regex)) {
       match = true;
 
       break;
     }
   }
 
-  return match
-}
+  return match;
+};
 
 const getCurrentEnv = async (url) => {
   if (url.includes("localhost") || url.includes("127.0.0.1")) {
@@ -78,13 +80,13 @@ const getCurrentEnv = async (url) => {
   }
 
   const apps = await getStorageAsync("apps");
-  let production_urls = apps.map(app => app.production)
+  let production_urls = apps?.map((app) => app.production);
 
   if (matchAnyUrls(url, production_urls)) {
     return { text: "PRODUCTION", color: PROD_COLOR };
   }
 
-  let staging_urls = apps.map(app => app.staging)
+  let staging_urls = apps?.map((app) => app.staging);
 
   if (matchAnyUrls(url, staging_urls)) {
     return { text: "STAGING", color: STAGING_COLOR };
@@ -110,7 +112,8 @@ chrome.storage.onChanged.addListener(async function (changes) {
     active: true,
     lastFocusedWindow: true,
   });
-  if (changes.showEnvInfo.newValue) {
+
+  if (changes.showEnvInfo?.newValue) {
     changeEnv(tab);
   } else {
     chrome.scripting.executeScript({
