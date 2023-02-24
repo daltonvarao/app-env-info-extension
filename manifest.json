@@ -13,14 +13,14 @@
   "manifest_version": 3,
   "web_accessible_resources": [
     {
-      "resources": ["*.js", "*.html"],
+      "resources": ["*.js", "*.html", "*.css"],
       "matches": ["<all_urls>"],
       "run_at": "document_end"
     }
   ],
   "content_scripts": [
     {
-      "css": ["src/scripts/style.css"],
+      "css": ["src/scripts/background.css"],
       "matches": ["<all_urls>"]
     }
   ],
